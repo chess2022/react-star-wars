@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import './App.css';
+import "./web_fonts/distantgalaxy_regular_macroman/stylesheet.css";
+import { useState, useEffect } from "react";
+import StarshipDisplay from './components/Starship';
+
+
+export default function App() {
+  // state to hold starship data
+  const [starship, setStarship] = useState([]);
+  // function to getStarship
+  const getStarship = async () => {
+    // make fetch request and store response
+    const response = await fetch("https://swapi.dev/api/starships/");
+    // parse JSON response into a javascript object
+    const data = await response.json();
+    // set the Starship state to the starships
+    setStarship(data);
+  };
+
+  useEffect(() => {getStarship()}, []);
+
+  // map    
+  const starships = starship?.results?.map((eachShip, index) => {
+    //  use ? to check if the object is there - shorthand for if -> then
+    console.log(eachShip);
+    return <StarshipDisplay name={eachShip.name} key={index} />;
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>Star Wars Starships</h1>
+      <div className="starship-display">{starships}</div>
+    </>
   );
 }
-
-export default App;
